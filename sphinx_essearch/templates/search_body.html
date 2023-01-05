@@ -1,0 +1,19 @@
+<h1 id="search-documentation">検索</h1>
+
+<form action="" method="get">
+  <input type="text" name="q" value="" />
+  <input type="submit" value="検索" />
+  <span id="search-progress" style="padding-left: 10px"></span>
+</form>
+
+<h2>検索結果</h2>
+<div id="search-results">
+  <ul class="search">
+    {% for path, title, html in matches %}
+      <li>
+        <a href="{{ path }}" target="_blank">{{ title }}</a>
+        <div class="context">{{ html | safe }}</div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
