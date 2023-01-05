@@ -5,11 +5,8 @@ from flask import (
     request,
 )
 from sphinx.util.console import nocolor
-from sphinxcontrib.websupport import WebSupport
 
-from .search import ESSearch
-from .templates import get_dir
-from .handle import handle
+from .handle import Handler
 
 
 def preview(
@@ -22,26 +19,22 @@ def preview(
     search_html: str,
 ):
     app = Flask(__name__)
-    app.template_folder = get_dir()
-    websupport = WebSupport(
-        builddir=support,
-        search=ESSearch(
-            aws_host=aws_host,
-            aws_region=aws_region,
-            index_name=es_index_name,
-        ),
+    handler = Handler(
+        out=out,
+        support=support,
+        aws_host=aws_host,
+        aws_region=aws_region,
+        es_index_name=es_index_name,
+        search_html=search_html,
     )
 
     nocolor()
 
     @app.route("/<path:path_str>")
     def _handle(path_str):
-        ret = handle(
+        ret = handler.handle(
             path_str=request.path,
-            out_dir=out,
             args=request.args,
-            search_html=search_html,
-            websupport=websupport,
         )
 
         if ret.get("status", 200) != 200 and "body" not in ret:

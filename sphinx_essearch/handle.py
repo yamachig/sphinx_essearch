@@ -3,6 +3,7 @@ from pathlib import Path
 from sphinxcontrib.websupport import WebSupport
 from .templates import get_dir
 from typing import TypedDict, Union
+from .search import ESSearch
 import jinja2 as j2
 
 j2_env = j2.Environment(loader=j2.FileSystemLoader(get_dir()))
@@ -30,6 +31,43 @@ class Response(TypedDict, total=False):
     status: int
     body: Union[str, bytes]
     content_type: Union[str, None]
+
+
+class Handler:
+    def __init__(
+        self,
+        *,
+        out: str,
+        support: str,
+        aws_host: str,
+        aws_region: str,
+        es_index_name: str,
+        search_html: str,
+    ):
+        self.websupport = WebSupport(
+            builddir=support,
+            search=ESSearch(
+                aws_host=aws_host,
+                aws_region=aws_region,
+                index_name=es_index_name,
+            ),
+        )
+        self.out_dir = out
+        self.search_html = search_html
+
+    def handle(
+        self,
+        *,
+        path_str: str,
+        args: dict[str, str],
+    ):
+        return handle(
+            path_str=path_str,
+            out_dir=self.out_dir,
+            args=args,
+            search_html=self.search_html,
+            websupport=self.websupport,
+        )
 
 
 def handle(
