@@ -13,6 +13,7 @@ from sphinxcontrib.websupport import WebSupport
 
 from .search import ESSearch
 from .templates import get_dir
+from .handle import handle
 
 
 def preview(
@@ -40,51 +41,25 @@ def preview(
 
     nocolor()
 
-    def get_content_type(name):
-        content_type = mimetypes.guess_type(name)[0]
-        if not content_type:
-            if name.endswith(".svg"):
-                content_type = "image/svg+xml"
-            if name.endswith(".woff"):
-                content_type = "application/font-woff"
-            if name.endswith(".ttf"):
-                content_type = "application/x-font-ttf"
-            if name.endswith(".otf"):
-                content_type = "application/x-font-ttf"
-            if name.endswith(".svgf"):
-                content_type = "image/svg+xml"
-            if name.endswith(".eot"):
-                content_type = "application/vnd.ms-fontobject"
-        return content_type
-
     @app.route("/<path:path_str>")
-    def get_file(path_str):
-        path = (out_dir_path / path_str).resolve()
-        if path.exists():
-            return Response(
-                response=path.read_bytes(),
-                content_type=get_content_type(path.name),
-            )
+    def _handle(path_str):
+        ret = handle(
+            path_str=request.path,
+            out_dir=out,
+            args=request.args,
+            search_html=search_html,
+            websupport=websupport,
+        )
+
+        if ret["status"] != 200 and "body" not in ret:
+            abort(ret["status"])
         else:
-            abort(404)
-
-    @app.route(f"/{search_html}")
-    def search():
-        q = request.args.get("q")
-        matches = websupport.search.handle_query(q)
-        search_body = render_template(
-            "search_body.html",
-            matches=matches,
-        )
-
-        html = search_html_path.read_text(encoding="utf-8")
-        html = html.replace(
-            "<!-- body_place -->",
-            search_body,
-        )
-        return Response(
-            response=html,
-        )
+            resp = Response(
+                status=ret.get("status", 200),
+                response=ret.get("body", None),
+                content_type=ret.get("content_type", None),
+            )
+            return resp
 
     app.debug = True
     app.run(host="0.0.0.0")

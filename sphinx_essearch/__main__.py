@@ -8,8 +8,8 @@ def main():
 
     DOTENV_LOADED = os.environ.get("DOTENV_LOADED")
     if not DOTENV_LOADED:
-        load_dotenv(str(Path(os.getcwd()) / "default.env"))
-        load_dotenv(Path(os.getcwd()) / ".env")
+        load_dotenv(Path(os.getcwd()) / "default.env", override=True)
+        load_dotenv(Path(os.getcwd()) / ".env", override=True)
 
     parser = argparse.ArgumentParser()
 
