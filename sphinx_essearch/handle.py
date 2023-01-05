@@ -2,10 +2,11 @@ import mimetypes
 from pathlib import Path
 from sphinxcontrib.websupport import WebSupport
 from .templates import get_dir
-from typing import TypedDict, Optional, Union
+from typing import TypedDict, Union
 import jinja2 as j2
 
 j2_env = j2.Environment(loader=j2.FileSystemLoader(get_dir()))
+
 
 def get_content_type(name):
     content_type = mimetypes.guess_type(name)[0]
@@ -24,17 +25,19 @@ def get_content_type(name):
             content_type = "application/vnd.ms-fontobject"
     return content_type
 
+
 class Response(TypedDict, total=False):
     status: int
     body: Union[str, bytes]
-    content_type: str
+    content_type: Union[str, None]
+
 
 def handle(
-    *, 
-    path_str: str, 
-    out_dir: str, 
-    args: dict[str, str], 
-    search_html: str, 
+    *,
+    path_str: str,
+    out_dir: str,
+    args: dict[str, str],
+    search_html: str,
     websupport: WebSupport,
 ) -> Response:
     out_dir_path = Path(out_dir)

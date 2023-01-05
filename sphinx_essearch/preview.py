@@ -1,11 +1,7 @@
-import mimetypes
-from pathlib import Path
-
 from flask import (
     Flask,
     Response,
     abort,
-    render_template,
     request,
 )
 from sphinx.util.console import nocolor
@@ -25,9 +21,6 @@ def preview(
     es_index_name: str,
     search_html: str,
 ):
-    out_dir_path = Path(out)
-    search_html_path = out_dir_path / search_html
-
     app = Flask(__name__)
     app.template_folder = get_dir()
     websupport = WebSupport(
@@ -51,8 +44,8 @@ def preview(
             websupport=websupport,
         )
 
-        if ret["status"] != 200 and "body" not in ret:
-            abort(ret["status"])
+        if ret.get("status", 200) != 200 and "body" not in ret:
+            abort(ret.get("status", 200))
         else:
             resp = Response(
                 status=ret.get("status", 200),
