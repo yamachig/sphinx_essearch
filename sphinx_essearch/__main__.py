@@ -75,7 +75,13 @@ def main():
         default=os.getenv("ES_INDEX_NAME"),
     )
 
-    subparsers.add_parser("preview")
+    preview_parser = subparsers.add_parser("preview")
+    preview_parser.add_argument(
+        "--search-html",
+        dest="search_html",
+        type=str,
+        default="search.html",
+    )
 
     args = parser.parse_args()
 
@@ -101,6 +107,7 @@ def main():
             aws_host=args.aws_host,
             aws_region=args.aws_region,
             es_index_name=args.es_index_name,
+            search_html=args.search_html,
         )
 
 

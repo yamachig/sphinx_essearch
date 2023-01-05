@@ -22,9 +22,10 @@ def preview(
     aws_host: str,
     aws_region: str,
     es_index_name: str,
+    search_html: str,
 ):
     out_dir_path = Path(out)
-    search_html_path = out_dir_path / "search.html"
+    search_html_path = out_dir_path / search_html
 
     app = Flask(__name__)
     app.template_folder = get_dir()
@@ -67,7 +68,7 @@ def preview(
         else:
             abort(404)
 
-    @app.route("/search.html")
+    @app.route(f"/{search_html}")
     def search():
         q = request.args.get("q")
         matches = websupport.search.handle_query(q)
