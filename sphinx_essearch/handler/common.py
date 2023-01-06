@@ -16,6 +16,8 @@ def get_content_type(name):
             content_type = "image/svg+xml"
         if name.endswith(".woff"):
             content_type = "application/font-woff"
+        if name.endswith(".woff2"):
+            content_type = "application/font-woff2"
         if name.endswith(".ttf"):
             content_type = "application/x-font-ttf"
         if name.endswith(".otf"):
