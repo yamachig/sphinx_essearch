@@ -18,11 +18,6 @@ def main():
         type=str,
         default=os.getenv("OUT_DIR"),
     )
-    parser.add_argument(
-        "--support",
-        type=str,
-        default=os.getenv("SUPPORT_DIR"),
-    )
 
     parser.add_argument(
         "--aws-host",
@@ -55,6 +50,11 @@ def main():
         "--doctree",
         type=str,
         default=os.getenv("DOCTREE_DIR"),
+    )
+    build_parser.add_argument(
+        "--support",
+        type=str,
+        default=os.getenv("SUPPORT_DIR"),
     )
     build_parser.add_argument(
         "--aws-host",
@@ -103,7 +103,6 @@ def main():
 
         preview(
             out=args.out,
-            support=args.support,
             aws_host=args.aws_host,
             aws_region=args.aws_region,
             es_index_name=args.es_index_name,

@@ -6,25 +6,27 @@ from flask import (
 )
 from sphinx.util.console import nocolor
 
-from .handle import Handler
+from .handle import FSHandler
+from .search import ESSearch
 
 
 def preview(
     *,
     out: str,
-    support: str,
     aws_host: str,
     aws_region: str,
     es_index_name: str,
     search_html: str,
 ):
     app = Flask(__name__)
-    handler = Handler(
-        out=out,
-        support=support,
+    search = ESSearch(
         aws_host=aws_host,
         aws_region=aws_region,
-        es_index_name=es_index_name,
+        index_name=es_index_name,
+    )
+    handler = FSHandler(
+        out=out,
+        search=search,
         search_html=search_html,
     )
 
