@@ -80,7 +80,7 @@ def main():
         "--search-html",
         dest="search_html",
         type=str,
-        default="search.html",
+        default=os.getenv("SEARCH_HTML"),
     )
 
     args = parser.parse_args()
