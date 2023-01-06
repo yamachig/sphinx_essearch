@@ -6,7 +6,7 @@ from flask import (
 )
 from sphinx.util.console import nocolor
 
-from .handle import FSHandler
+from .handler.fs_handler import FSHandler
 from .search import ESSearch
 
 

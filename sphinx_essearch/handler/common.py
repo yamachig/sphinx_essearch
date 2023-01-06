@@ -1,8 +1,8 @@
 import mimetypes
 from pathlib import Path
-from .templates import get_dir
+from ..templates import get_dir
 from typing import TypedDict, Union
-from .search import ESSearch
+from ..search import ESSearch
 from abc import ABCMeta, abstractmethod
 import jinja2 as j2
 
@@ -83,26 +83,3 @@ class BaseHandler(metaclass=ABCMeta):
                 "body": b,
                 "content_type": get_content_type(Path(path_str).name),
             }
-
-
-class FSHandler(BaseHandler):
-    def __init__(
-        self,
-        *,
-        search: ESSearch,
-        search_html: str,
-        out: str,
-    ):
-        super().__init__(
-            search=search,
-            search_html=search_html,
-        )
-        self.out_dir = out
-
-    def get_file_bytes(self, path_str: str):
-        out_dir_path = Path(self.out_dir)
-        path = (out_dir_path / path_str.lstrip("/")).resolve()
-        if path.exists():
-            return path.read_bytes()
-        else:
-            return None
