@@ -75,6 +75,7 @@ class BaseHandler(metaclass=ABCMeta):
             return {
                 "status": 200,
                 "body": html,
+                "content_type": get_content_type(Path(path_str).name),
             }
 
         else:
