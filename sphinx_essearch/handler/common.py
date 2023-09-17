@@ -39,7 +39,7 @@ class BaseHandler(metaclass=ABCMeta):
     def __init__(
         self,
         *,
-        search: ESSearch,
+        search: ESSearch | None,
         search_html: str,
     ):
         self.search = search
@@ -55,7 +55,11 @@ class BaseHandler(metaclass=ABCMeta):
         path_str: str,
         args: dict[str, str],
     ) -> Response:
-
+        if self.search is None:
+            return {
+                "status": 500,
+                "body": "Search not configured properly.",
+            }
         b = self.get_file_bytes(path_str)
         if b is None:
             return {

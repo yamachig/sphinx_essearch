@@ -19,11 +19,18 @@ def preview(
     search_html: str,
 ):
     app = Flask(__name__)
-    search = ESSearch(
-        aws_host=aws_host,
-        aws_region=aws_region,
-        index_name=es_index_name,
-    )
+    search = None
+    if aws_host and aws_region and es_index_name:
+        search = ESSearch(
+            aws_host=aws_host,
+            aws_region=aws_region,
+            index_name=es_index_name,
+        )
+    else:
+        print(
+            "[sphinx_essearch][warn] aws_host, aws_region or es_index_name not specified"
+        )
+
     handler = FSHandler(
         out=out,
         search=search,

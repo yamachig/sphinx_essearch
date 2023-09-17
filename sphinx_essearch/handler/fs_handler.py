@@ -7,7 +7,7 @@ class FSHandler(BaseHandler):
     def __init__(
         self,
         *,
-        search: ESSearch,
+        search: ESSearch | None,
         search_html: str,
         out: str,
     ):
