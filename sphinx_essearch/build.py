@@ -23,14 +23,22 @@ def build(
 
     nocolor()
 
-    websupport = WebSupport(
-        srcdir=src,
-        builddir=support,
-        search=ESSearch(
+    search = None
+    if aws_host and aws_region and es_index_name:
+        search = ESSearch(
             aws_host=aws_host,
             aws_region=aws_region,
             index_name=es_index_name,
-        ),
+        )
+    else:
+        print(
+            "[sphinx_essearch][warn] aws_host, aws_region or es_index_name not specified"
+        )
+
+    websupport = WebSupport(
+        srcdir=src,
+        builddir=support,
+        search=search,
         storage=SQLAlchemyStorage("sqlite://"),
     )
     websupport.build()
@@ -42,5 +50,5 @@ def build(
         doctreedir=doctree,
         buildername="html",
     )
-    sphinx.config.html_context["essearch"] = True
+    sphinx.config.html_context["essearch"] = search is not None
     sphinx.build(force_all=True)
