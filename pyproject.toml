@@ -9,7 +9,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.11"
 boto3 = "^1.28.49"
-SQLAlchemy = "^2.0.20"
+SQLAlchemy = "^1.4.49"
 python-dotenv = "^1.0.0"
 opensearch-py = "^2.3.1"
 sphinxcontrib-websupport = "^1.2.6"
