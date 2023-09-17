@@ -55,11 +55,6 @@ class BaseHandler(metaclass=ABCMeta):
         path_str: str,
         args: dict[str, str],
     ) -> Response:
-        if self.search is None:
-            return {
-                "status": 500,
-                "body": "Search not configured properly.",
-            }
         b = self.get_file_bytes(path_str)
         if b is None:
             return {
@@ -67,6 +62,11 @@ class BaseHandler(metaclass=ABCMeta):
             }
 
         if path_str == f"/{self.search_html.lstrip('/')}":
+            if self.search is None:
+                return {
+                    "status": 500,
+                    "body": "Search not configured properly.",
+                }
             q = args.get("q")
             matches = self.search.handle_query(q)
             search_body_template = j2_env.get_template("search_body.html")
